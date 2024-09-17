@@ -2,6 +2,7 @@ use std::{fmt::Display, io};
 
 use super::request::{self, HttpRequest, Version};
 
+#[derive(Debug)]
 pub struct HttpResponse {
     version: Version,
     status: ResponseStatus,
@@ -29,14 +30,21 @@ impl HttpResponse {
                 content_length = content.len();
                 status = ResponseStatus::OK;
                 accept_ranges = AcceptRanges::Bytes;
+                let content = format!("{} {} \n{}content-length: {}\r\n\r\n{}", version, status, accept_ranges, content_length, content);
+                response_body.push_str(&content);
             } else {
-                let content = format!("{} {}\n{}\ncontent-length: {}\r\n\r\n\
-                <html>
+                let four_o_four = " <html>
                 <body>
                 <h1>404 NOT FOUND
                 </body>
-                </html>
-                ", version, status, accept_ranges, content_length);
+                </html>";
+                content_length = four_o_four.len();
+                let content = format!(
+                    "{} {}\n{}\ncontent-length: {}\r\n\r\n{}
+               
+                ",
+                    version, status, accept_ranges, content_length, four_o_four
+                );
                 response_body.push_str(&content);
             }
         }
