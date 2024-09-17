@@ -30,7 +30,7 @@ impl HttpResponse {
                 content_length = content.len();
                 status = ResponseStatus::OK;
                 accept_ranges = AcceptRanges::Bytes;
-                let content = format!("{} {} \n{}content-length: {}\r\n\r\n{}", version, status, accept_ranges, content_length, content);
+                let content = format!("{} {}\n{}\ncontent-length: {}\r\n\r\n{}", version, status, accept_ranges, content_length, content);
                 response_body.push_str(&content);
             } else {
                 let four_o_four = " <html>
