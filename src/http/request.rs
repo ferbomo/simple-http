@@ -3,7 +3,7 @@ use std::{collections::HashMap, fmt::Display, io, str::FromStr};
 #[derive(Debug)]
 pub struct HttpRequest {
     method: Method,
-    resource: Resource,
+    pub resource: Resource,
     version: Version,
     headers: HttpHeader,
     pub request_body: String,
@@ -77,13 +77,23 @@ impl Method {
 }
 
 #[derive(Debug)]
-enum Version {
+pub enum Version {
     V1_1,
     V2_0,
 }
 
+impl Display for Version {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let msg = match self {
+            Version::V1_1 => "HTTP/1.1",
+            Version::V2_0 => "HTTP/2",
+        };
+        write!(f, "{}", msg)
+    }
+}
+
 #[derive(Debug)]
-struct VersionError {
+pub struct VersionError {
     msg: String,
 }
 
@@ -121,8 +131,8 @@ impl FromStr for Version {
 }
 
 #[derive(Debug)]
-struct Resource {
-    path: String,
+pub struct Resource {
+    pub path: String,
 }
 
 impl Resource {
